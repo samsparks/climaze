@@ -1,0 +1,2 @@
+
+Library('maze', Glob('*.cpp'))
