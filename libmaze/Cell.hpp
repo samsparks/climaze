@@ -5,7 +5,10 @@
 
 class Cell
 {
-    int mValue; ///< value of the cell
+    static const unsigned VISITED = 0x00000001;
+    static const unsigned OPENED  = 0x00000002;
+
+    unsigned mValue; ///< value of the cell
 public:
     /// \brief Constructor
     explicit Cell();
@@ -19,9 +22,6 @@ public:
     bool Opened() const;
     /// \brief Set the cell as open
     Cell& Open();
-
-    /// \brief Check to see is a cell is open, ie can be entered
-    bool Closed() const;
     /// \brief Set the cell as open
     Cell& Close();
 };
