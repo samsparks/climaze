@@ -1,6 +1,6 @@
 
-#ifndef MAZE_HPP
-#define MAZE_HPP
+#ifndef CELL_HPP
+#define CELL_HPP
 #include <iosfwd>
 
 class Cell
@@ -27,4 +27,4 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& out, const Cell& cell);
-#endif // MAZE_HPP
+#endif // CELL_HPP
