@@ -9,3 +9,18 @@ Export('BaseEnv')
 SConscript(['climaze/SConscript',
             'libmaze/SConscript',
             'test/SConscript'])
+
+Help("""
+Usage: 'scons [options] [args] targets...'
+
+Targets:
+  test_runner  builds the unit test runner
+
+Options:
+  -c           cleans the specified target
+               
+Args:          
+  test         runs the full unit test suite
+    
+""")
+
