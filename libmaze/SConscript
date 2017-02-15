@@ -1,2 +1,4 @@
+Import('BaseEnv')
+env = BaseEnv.Clone()
 
-Library('maze', Glob('*.cpp'))
+env.Library('maze', Glob('*.cpp'))

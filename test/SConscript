@@ -1,10 +1,11 @@
-env = Environment()
+Import('BaseEnv')
+env = BaseEnv.Clone()
 
 tester = env.Program(target='test_runner', 
                      source=Glob('*.cpp'),
                      CPPPATH=['#/libmaze'],
                      LIBS=['maze', 'boost_unit_test_framework'],
-                     LIBPATH = ['/usr/lib', '#/libmaze'],
+                     LIBPATH=['/usr/lib', '#/libmaze'],
                      CCFLAGS='-W -Wall -Wextra -Werror -Wno-unused-parameter -g -O3 -std=c++0x')
 
 test_alias = env.Alias('test', tester, tester[0].abspath)

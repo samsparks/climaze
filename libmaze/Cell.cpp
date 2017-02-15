@@ -39,8 +39,3 @@ Cell& Cell::Close()
     mValue ^= OPENED;
     return *this;
 }
-
-std::ostream& operator<<(std::ostream& out, const Cell& cell)
-{
-    return out << "[v=" << cell.Visited() << ",o=" << cell.Opened() << "]";
-}

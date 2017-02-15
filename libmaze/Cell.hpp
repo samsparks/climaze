@@ -1,7 +1,6 @@
 
 #ifndef CELL_HPP
 #define CELL_HPP
-#include <iosfwd>
 
 class Cell
 {
@@ -26,5 +25,4 @@ public:
     Cell& Close();
 };
 
-std::ostream& operator<<(std::ostream& out, const Cell& cell);
 #endif // CELL_HPP
