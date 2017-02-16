@@ -1,0 +1,9 @@
+Import('BaseEnv')
+env = BaseEnv.Clone()
+
+env.Program(target='climaze', 
+            source=Glob('*.cpp'),
+            CPPPATH=['#/libmaze'],
+            LIBS=['maze', 'ncurses'],
+            LIBPATH=['/usr/lib', '#/libmaze'],
+            CCFLAGS='-W -Wall -Wextra -Werror -Wno-unused-parameter -g -O3 -std=c++0x')

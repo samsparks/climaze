@@ -21,7 +21,9 @@ public:
     size_t Columns() const;
 
     Cell& At(size_t row, size_t col);
+    const Cell& At(size_t row, size_t col) const;
     Cell& At(const Coordinate& coord);
+    const Cell& At(const Coordinate& coord) const;
     bool Contains(size_t row, size_t col) const;
     bool Contains(const Coordinate& coord) const;
 };

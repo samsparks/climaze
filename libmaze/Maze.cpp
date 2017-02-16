@@ -27,7 +27,17 @@ Cell& Maze::At(size_t row, size_t col)
     return mContent.at(row).at(col);
 }
 
+const Cell& Maze::At(size_t row, size_t col) const
+{
+    return mContent.at(row).at(col);
+}
+
 Cell& Maze::At(const Coordinate& coord)
+{
+    return At(coord.first, coord.second);
+}
+
+const Cell& Maze::At(const Coordinate& coord) const
 {
     return At(coord.first, coord.second);
 }
