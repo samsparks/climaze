@@ -1,6 +1,6 @@
-# TODO: Help
 # TODO: pretty build
-# TODO: doxy?
+# TODO: doxy
+# TODO: autogenerate .syntastic_cpp_config
 BaseEnv = Environment(CCFLAGS='-W -Wall -Wextra -Werror -Wno-unused-parameter -g -O3 -std=c++0x',
                       OBJPREFIX='.obj/' )
 

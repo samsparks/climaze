@@ -1,0 +1,11 @@
+-W
+-Wall
+-Wextra
+-Werror
+-Wno-unused-parameter
+-g
+-O3
+-std=c++0x
+-Ilibmaze
+
+
