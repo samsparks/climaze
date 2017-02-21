@@ -9,8 +9,6 @@ int main()
 {
     Maze maze(20,40);
     Display<NCursesOutputPolicy> display;
-    display.Update(maze);
-    display.GetUserInput();
     DepthFirstGenerator generator(maze);
 
     auto start = std::make_pair<size_t,size_t>(1,1);
