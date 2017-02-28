@@ -92,6 +92,7 @@ public:
 
     void Initialize(Maze& maze, Maze::Coordinate& coord)
     {
+        srand(time(NULL));
         VisitBorders(maze);
         maze.At(coord).Visit().Open();
         mVisitStack.push_back(coord);
