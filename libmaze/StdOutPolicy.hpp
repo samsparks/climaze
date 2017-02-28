@@ -1,7 +1,8 @@
 #ifndef STDOUT_POLICY_HPP
 #define STDOUT_POLICY_HPP
 
-#include <ncurses.h> // use for characters (get actual symbols later)
+namespace Display
+{
 
 // policy for outputing the maze to stdout
 struct StdOutputPolicy
@@ -17,57 +18,57 @@ struct StdOutputPolicy
 
     void PrintPlus()
     {
-        std::cout << ACS_PLUS;
+        std::cout << '#';
     }
 
     void PrintTopTee()
     {
-        std::cout << ACS_TTEE;
+        std::cout << '#';
     }
 
     void PrintBottomTee()
     {
-        std::cout << ACS_BTEE;
+        std::cout << '#';
     }
 
     void PrintLeftTee()
     {
-        std::cout << ACS_LTEE;
+        std::cout << '#';
     }
 
     void PrintRightTee()
     {
-        std::cout << ACS_RTEE;
+        std::cout << '#';
     }
 
     void PrintUpperLeftCorner()
     {
-        std::cout << ACS_ULCORNER;
+        std::cout << '#';
     }
 
     void PrintUpperRightCorner()
     {
-        std::cout << ACS_URCORNER;
+        std::cout << '#';
     }
 
     void PrintLowerLeftCorner()
     {
-        std::cout << ACS_LLCORNER;
+        std::cout << '#';
     }
 
     void PrintLowerRightCorner()
     {
-        std::cout << ACS_LRCORNER;
+        std::cout << '#';
     }
 
     void PrintHorizontalLine()
     {
-        std::cout << ACS_HLINE;
+        std::cout << '#';
     }
 
     void PrintVerticalLine()
     {
-        std::cout << ACS_VLINE;
+        std::cout << '#';
     }
 
     void EndRow()
@@ -92,5 +93,7 @@ struct StdOutputPolicy
         std::cout.flush();
     }
 };
+
+}; // end namespace Display
 #endif // NCURSES_OUTPUT_POLICY_HPP
 

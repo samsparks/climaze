@@ -1,30 +1,39 @@
 #ifndef DISPLAY_HPP
 #define DISPLAY_HPP
 #include <stdexcept>
+#include "NCursesPolicy.hpp"
+#include "StdOutPolicy.hpp"
+#include "NullPolicy.hpp"
 
+namespace Display {
 ///< template for policy-based design, so different output formats can be used
-template <typename OutputPolicy>
-class Display : private OutputPolicy
+/// \brief Responsible for rendering a maze and conditionally blocking on user input according to
+///        a specified User-Interface policy.
+template <typename UIPolicy>
+class Display : private UIPolicy
 {
-    using OutputPolicy::Initialize;
-    using OutputPolicy::PrintOpen;
-    using OutputPolicy::PrintPlus;
-    using OutputPolicy::PrintTopTee;
-    using OutputPolicy::PrintBottomTee;
-    using OutputPolicy::PrintLeftTee;
-    using OutputPolicy::PrintRightTee;
-    using OutputPolicy::PrintUpperLeftCorner;
-    using OutputPolicy::PrintUpperRightCorner;
-    using OutputPolicy::PrintLowerLeftCorner;
-    using OutputPolicy::PrintLowerRightCorner;
-    using OutputPolicy::PrintHorizontalLine;
-    using OutputPolicy::PrintVerticalLine;
-    using OutputPolicy::EndRow;
-    using OutputPolicy::DisplayMessage;
-    using OutputPolicy::Flush;
-    using OutputPolicy::BlockingRead;
+    using UIPolicy::Initialize;
+    using UIPolicy::PrintOpen;
+    using UIPolicy::PrintPlus;
+    using UIPolicy::PrintTopTee;
+    using UIPolicy::PrintBottomTee;
+    using UIPolicy::PrintLeftTee;
+    using UIPolicy::PrintRightTee;
+    using UIPolicy::PrintUpperLeftCorner;
+    using UIPolicy::PrintUpperRightCorner;
+    using UIPolicy::PrintLowerLeftCorner;
+    using UIPolicy::PrintLowerRightCorner;
+    using UIPolicy::PrintHorizontalLine;
+    using UIPolicy::PrintVerticalLine;
+    using UIPolicy::EndRow;
+    using UIPolicy::DisplayMessage;
+    using UIPolicy::Flush;
+    using UIPolicy::BlockingRead;
 
 public:
+    /// \brief Updates the display with the given maze and message.
+    /// \param[in] maze the maze to show
+    /// \param[in] msg an optional string to display to the user. Empty strings are ignored
     void Update(const Maze& maze, const std::string msg = "")
     {
         Initialize();
@@ -80,10 +89,13 @@ public:
         Flush();
     }
 
+    /// \brief Returns the value obtained by a blocking read
+    /// \returns a string representation of the value returend by the UI Policy's blocking read
     std::string GetUserInput()
     {
         return BlockingRead();
     }
 };
 
+};
 #endif // DISPLAY_HPP

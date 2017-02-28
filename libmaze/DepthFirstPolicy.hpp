@@ -3,11 +3,20 @@
 #include <stdexcept>
 #include "Maze.hpp"
 
+namespace Generator
+{
+
+/// \brief Policy to generate a maze using a depth-first algorithm. 
+///        The Depth-First algorithm uses a stack to generate the maze. Each cell is
+///        visited, and a neighbor candidate is randomly selected as the next cell. Once
+///        there are no neighbor candidates, the stack is popped until an unvisited
+///        neighbor cell is available, and that new path is then traversed to completion.
 class DepthFirstPolicy
 {
-    std::vector<Maze::Coordinate> mVisitStack;
+    std::vector<Maze::Coordinate> mVisitStack; ///< stack of previously visited cells
 
-    // marks all borders as visted, to prevent them being opened
+    /// \brief marks all borders as visted, to prevent them being opened
+    /// \param[in] maze the maze whose borders should be visited
     void VisitBorders(Maze& maze)
     {
         for(size_t r = 0; r < maze.Rows(); ++r)
@@ -23,6 +32,10 @@ class DepthFirstPolicy
         }
     }
 
+    /// \brief Returns a container of potential candidates for selection as the next cell to visit
+    /// \param[in] maze reference to the maze being generated
+    /// \param[in] current the current coordinate that neighbors are being chosen against
+    /// \return container of valid candidates.
     std::vector<Maze::Coordinate> NextCandidates(const Maze& maze, const Maze::Coordinate& current)
     {
         std::vector<Maze::Coordinate> neighbors;
@@ -31,16 +44,6 @@ class DepthFirstPolicy
         // 1. it has not yet been visited, AND
         // 2. it does not border an open cell
 
-        // for r in {-1,0,1}
-        //   for c in {-1,0,1}
-        //     if !c && ! r
-        //       continue;
-        //     auto candidate = std::make_pair(current.first+r, current.second+c);
-        //     if( !maze.Contains(candidate);
-        //       continue;
-        //     if( maze.At(candidate).Visited() )
-        //       continue;
-       
         for(int row : {-1, 0, 1} )
         {
             for( int col : {-1, 0, 1} )
@@ -122,4 +125,5 @@ public:
     }
 };
 
+}; // end namespace Generator
 #endif // DEPTH_FIRST_POLICY

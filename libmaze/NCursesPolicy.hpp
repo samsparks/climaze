@@ -4,6 +4,9 @@
 
 #include <ncurses.h>
 
+namespace Display
+{
+
 // policy for outputing the maze to ncurses
 struct NCursesOutputPolicy
 {
@@ -101,5 +104,7 @@ struct NCursesOutputPolicy
         refresh();
     }
 };
+
+}; // end namespace Display
 #endif // NCURSES_OUTPUT_POLICY_HPP
 

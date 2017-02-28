@@ -1,6 +1,9 @@
 #ifndef NULL_OUTPUT_POLICY_HPP
 #define NULL_OUTPUT_POLICY_HPP
 
+namespace Display
+{
+
 // policy for not outputing the maze
 struct NullOutputPolicy
 {
@@ -73,5 +76,8 @@ struct NullOutputPolicy
     {
     }
 };
+
+}; // end namespace Display
+
 #endif // NULL_OUTPUT_POLICY_HPP
 
