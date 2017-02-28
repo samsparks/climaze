@@ -79,11 +79,11 @@ public:
        
         Flush();
     }
+
     std::string GetUserInput()
     {
         return BlockingRead();
     }
-
 };
 
 #endif // DISPLAY_HPP
