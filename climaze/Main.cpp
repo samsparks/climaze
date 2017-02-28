@@ -9,12 +9,12 @@
 
 int main()
 {
-    //Display<NCursesOutputPolicy> display;
-    Display<StdOutputPolicy> display;
-    Generator<DepthFirstPolicy, StdOutputPolicy> generator;
+    //Generator<DepthFirstPolicy, StdOutputPolicy> generator;
+    Generator<DepthFirstPolicy, NullOutputPolicy> generator;
 
-    auto maze = generator.Build(20, 30, 1, 1);
+    auto maze = generator.Build(30, 30, 1, 1);
 
+    Display<NCursesOutputPolicy> display;
     display.Update(maze);
     display.GetUserInput();
 }

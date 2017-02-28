@@ -5,27 +5,7 @@
 
 #include "Maze.hpp"
 #include "Display.hpp"
-
-struct NullOutputPolicy
-{
-    void Initialize() {};
-    void PrintOpen() {};
-    void PrintPlus() {};
-    void PrintTopTee() {};
-    void PrintBottomTee() {};
-    void PrintLeftTee() {};
-    void PrintRightTee() {};
-    void PrintUpperLeftCorner() {};
-    void PrintUpperRightCorner() {};
-    void PrintLowerLeftCorner() {};
-    void PrintLowerRightCorner() {};
-    void PrintHorizontalLine() {};
-    void PrintVerticalLine() {};
-    void EndRow() {};
-    void DisplayMessage() {};
-    void Flush() {};
-    void BlockingRead() {};
-};
+#include "NullOutputPolicy.hpp"
 
 ///< template for policy-based design, so different output formats can be used
 template <typename GenerationPolicy, typename OutputPolicy = NullOutputPolicy> 

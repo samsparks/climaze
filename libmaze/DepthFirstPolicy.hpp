@@ -6,7 +6,6 @@
 class DepthFirstPolicy
 {
     std::vector<Maze::Coordinate> mVisitStack;
-public:
 
     // marks all borders as visted, to prevent them being opened
     void VisitBorders(Maze& maze)
@@ -24,34 +23,72 @@ public:
         }
     }
 
-
-    std::vector<Maze::Coordinate> UnvisitedNeighbors(const Maze& maze, const Maze::Coordinate& current)
+    std::vector<Maze::Coordinate> NextCandidates(const Maze& maze, const Maze::Coordinate& current)
     {
         std::vector<Maze::Coordinate> neighbors;
         
-        auto next = current;
-        --next.first;
-        if( maze.Contains(next) && !maze.At(next).Visited() )
-            neighbors.push_back(next);
-        
-        
-        next = current;
-        ++next.first;
-        if( maze.Contains(next) && !maze.At(next).Visited() )
-            neighbors.push_back(next);
-        
-        next = current;
-        --next.second;
-        if( maze.Contains(next) && !maze.At(next).Visited() )
-            neighbors.push_back(next);
-        
-        next = current;
-        ++next.second;
-        if( maze.Contains(next) && !maze.At(next).Visited() )
-            neighbors.push_back(next);
+        // a neighboring cell is a candidate iff
+        // 1. it has not yet been visited, AND
+        // 2. it does not border an open cell
 
+        // for r in {-1,0,1}
+        //   for c in {-1,0,1}
+        //     if !c && ! r
+        //       continue;
+        //     auto candidate = std::make_pair(current.first+r, current.second+c);
+        //     if( !maze.Contains(candidate);
+        //       continue;
+        //     if( maze.At(candidate).Visited() )
+        //       continue;
+       
+        for(int row : {-1, 0, 1} )
+        {
+            for( int col : {-1, 0, 1} )
+            {
+                // the current cell is not a candidate
+                if( !row && !col )
+                    continue;
+                // diagonal cells are not candidates
+                if( row && col )
+                    continue;
+
+                auto next_coord = std::make_pair(current.first+row, current.second+col);
+
+                // previously visited cells are not candidates
+                if( maze.At(next_coord).Visited() )
+                    continue;
+
+                // cells that border an open cell (besides this one) are not candidates
+                if( col )
+                {
+                    if( maze.At(next_coord.first  , next_coord.second+col).Opened() || // check cell to the left/right
+                        maze.At(next_coord.first-1, next_coord.second    ).Opened() || // check cell below
+                        maze.At(next_coord.first+1, next_coord.second    ).Opened() || // check cell above
+                        maze.At(next_coord.first-1, next_coord.second+col).Opened() || // check cell diagonal below
+                        maze.At(next_coord.first+1, next_coord.second+col).Opened() )  // check cell diagonal above
+                    {
+                        continue;
+                    }
+                }
+                else // row
+                {
+                    if( maze.At(next_coord.first+row, next_coord.second  ).Opened() || // check cell to the left/right
+                        maze.At(next_coord.first    , next_coord.second-1).Opened() || // check cell below
+                        maze.At(next_coord.first    , next_coord.second+1).Opened() || // check cell above
+                        maze.At(next_coord.first+row, next_coord.second-1).Opened() || // check cell diagonal below
+                        maze.At(next_coord.first+row, next_coord.second+1).Opened() )  // check cell diagonal above
+                    {
+                        continue;
+                    }
+                }
+  
+                neighbors.push_back(next_coord);
+            }
+        }
         return neighbors;
     }
+
+public:
 
     void Initialize(Maze& maze, Maze::Coordinate& coord)
     {
@@ -63,15 +100,15 @@ public:
     bool NextStep(Maze& maze)
     {
         if( mVisitStack.empty() )
-            throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + " called with an empty stack");
+            return false;
 
         // if we don't have any neibhbors that haven't already been visited, we pop this cell off
         // the stack and check the prior cell
-        auto available_neighbors = UnvisitedNeighbors(maze, mVisitStack.back());
+        auto available_neighbors = NextCandidates(maze, mVisitStack.back());
         if( available_neighbors.empty() )
         {
             mVisitStack.pop_back();
-            return false;
+            return true;
         }
         
         // otherwise, we randomly choose one to visit, and push it on the stack for the next call
