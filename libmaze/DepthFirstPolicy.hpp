@@ -1,7 +1,7 @@
 #ifndef DEPTH_FIRST_POLICY
 #define DEPTH_FIRST_POLICY
 #include <stdexcept>
-#include "Maze.hpp"
+#include "Coordinate.hpp"
 
 namespace Generator
 {
@@ -11,9 +11,10 @@ namespace Generator
 ///        visited, and a neighbor candidate is randomly selected as the next cell. Once
 ///        there are no neighbor candidates, the stack is popped until an unvisited
 ///        neighbor cell is available, and that new path is then traversed to completion.
+template< typename Maze >
 class DepthFirstPolicy
 {
-    std::vector<Maze::Coordinate> mVisitStack; ///< stack of previously visited cells
+    std::vector<Coordinate> mVisitStack; ///< stack of previously visited cells
 
     /// \brief marks all borders as visted, to prevent them being opened
     /// \param[in] maze the maze whose borders should be visited
@@ -36,9 +37,9 @@ class DepthFirstPolicy
     /// \param[in] maze reference to the maze being generated
     /// \param[in] current the current coordinate that neighbors are being chosen against
     /// \return container of valid candidates.
-    std::vector<Maze::Coordinate> NextCandidates(const Maze& maze, const Maze::Coordinate& current)
+    std::vector<Coordinate> NextCandidates(const Maze& maze, const Coordinate& current)
     {
-        std::vector<Maze::Coordinate> neighbors;
+        std::vector<Coordinate> neighbors;
         
         // a neighboring cell is a candidate iff
         // 1. it has not yet been visited, AND
@@ -55,7 +56,7 @@ class DepthFirstPolicy
                 if( row && col )
                     continue;
 
-                auto next_coord = std::make_pair(current.first+row, current.second+col);
+                Coordinate next_coord(current.Row()+row, current.Column()+col);
 
                 // previously visited cells are not candidates
                 if( maze.At(next_coord).Visited() )
@@ -64,22 +65,22 @@ class DepthFirstPolicy
                 // cells that border an open cell (besides this one) are not candidates
                 if( col )
                 {
-                    if( maze.At(next_coord.first  , next_coord.second+col).Opened() || // check cell to the left/right
-                        maze.At(next_coord.first-1, next_coord.second    ).Opened() || // check cell below
-                        maze.At(next_coord.first+1, next_coord.second    ).Opened() || // check cell above
-                        maze.At(next_coord.first-1, next_coord.second+col).Opened() || // check cell diagonal below
-                        maze.At(next_coord.first+1, next_coord.second+col).Opened() )  // check cell diagonal above
+                    if( maze.At(next_coord.Row()  , next_coord.Column()+col).Opened() || // check cell to the left/right
+                        maze.At(next_coord.Row()-1, next_coord.Column()    ).Opened() || // check cell below
+                        maze.At(next_coord.Row()+1, next_coord.Column()    ).Opened() || // check cell above
+                        maze.At(next_coord.Row()-1, next_coord.Column()+col).Opened() || // check cell diagonal below
+                        maze.At(next_coord.Row()+1, next_coord.Column()+col).Opened() )  // check cell diagonal above
                     {
                         continue;
                     }
                 }
                 else // row
                 {
-                    if( maze.At(next_coord.first+row, next_coord.second  ).Opened() || // check cell to the left/right
-                        maze.At(next_coord.first    , next_coord.second-1).Opened() || // check cell below
-                        maze.At(next_coord.first    , next_coord.second+1).Opened() || // check cell above
-                        maze.At(next_coord.first+row, next_coord.second-1).Opened() || // check cell diagonal below
-                        maze.At(next_coord.first+row, next_coord.second+1).Opened() )  // check cell diagonal above
+                    if( maze.At(next_coord.Row()+row, next_coord.Column()  ).Opened() || // check cell to the left/right
+                        maze.At(next_coord.Row()    , next_coord.Column()-1).Opened() || // check cell below
+                        maze.At(next_coord.Row()    , next_coord.Column()+1).Opened() || // check cell above
+                        maze.At(next_coord.Row()+row, next_coord.Column()-1).Opened() || // check cell diagonal below
+                        maze.At(next_coord.Row()+row, next_coord.Column()+1).Opened() )  // check cell diagonal above
                     {
                         continue;
                     }
@@ -93,7 +94,7 @@ class DepthFirstPolicy
 
 public:
 
-    void Initialize(Maze& maze, Maze::Coordinate& coord)
+    void Initialize(Maze& maze, Coordinate& coord)
     {
         srand(time(NULL));
         VisitBorders(maze);

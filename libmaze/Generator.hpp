@@ -13,14 +13,14 @@ namespace Generator
 {
 
 ///< template for policy-based design, so different output formats can be used
-template <typename GenerationPolicy, typename OutputPolicy = Display::NullOutputPolicy> 
+template <typename Maze, typename GenerationPolicy, typename OutputPolicy = Display::NullOutputPolicy> 
 class Generator : private GenerationPolicy
 {
     using GenerationPolicy::Initialize;
     using GenerationPolicy::NextStep;
 
     const boost::posix_time::time_duration mUpdateDelay; ///< amount of time to delay between steps.
-    Display::Display<OutputPolicy> mDisplay;
+    Display::Display<Maze, OutputPolicy> mDisplay;
 
 public:
     Generator(boost::posix_time::time_duration update_delay = boost::posix_time::not_a_date_time)
@@ -32,7 +32,7 @@ public:
     {
         Maze maze(rows, columns);
 
-        auto start = std::make_pair<size_t,size_t>(1, 1);
+        Coordinate start(1, 1);
         Initialize(maze, start);
 
         do

@@ -9,7 +9,7 @@ namespace Display {
 ///< template for policy-based design, so different output formats can be used
 /// \brief Responsible for rendering a maze and conditionally blocking on user input according to
 ///        a specified User-Interface policy.
-template <typename UIPolicy>
+template <typename Maze, typename UIPolicy>
 class Display : private UIPolicy
 {
     using UIPolicy::Initialize;
