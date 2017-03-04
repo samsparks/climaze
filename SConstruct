@@ -7,6 +7,7 @@ BaseEnv = Environment(CCFLAGS='-W -Wall -Wextra -Werror -Wno-unused-parameter -g
 Export('BaseEnv')
 
 SConscript(['climaze/SConscript',
+            'dungeon/SConscript',
             'libmaze/SConscript',
             'test/SConscript'])
 
