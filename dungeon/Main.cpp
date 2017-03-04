@@ -139,10 +139,10 @@ int main()
     std::string response;
     while( story_ptr )
     {
-        dstream //<< player1
+        dstream //<< TODO: player1
                 << story_ptr->Narraration()
-                << std::endl;
-
+                ; // TODO: << std::endl;
+        dstream.flush();
         dstream >> response;
 
         story_ptr = story_ptr->ProcessResponse(response);

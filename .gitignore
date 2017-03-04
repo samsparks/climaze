@@ -1,5 +1,6 @@
 test_runner
 climaze
+dungeon
 
 *.o
 *.a
