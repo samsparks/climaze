@@ -9,7 +9,7 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <iostream>
 
-#include "DungeonStream.hpp"
+#include "NCursesStream.hpp"
 #include "Character.hpp"
 #include "Story.hpp"
 
@@ -131,7 +131,7 @@ int main()
 {
     // TODO: load game configuration file
     // TODO: I would like to build this on the CAF framework https://actor-framework.org
-    DungeonStream dstream;
+    NCursesStream nstream;
     Character player1;
 
     ReplayStory replay_story(player1);
@@ -140,11 +140,11 @@ int main()
     std::string response;
     while( story_ptr )
     {
-        dstream //<< TODO: player1
+        nstream //<< TODO: player1
                 << story_ptr->Narraration()
                 ; // TODO: << std::endl;
-        dstream.flush();
-        dstream >> response;
+        nstream.flush();
+        nstream >> response;
 
         story_ptr = story_ptr->ProcessResponse(response);
     }
