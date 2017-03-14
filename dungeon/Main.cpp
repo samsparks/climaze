@@ -130,6 +130,7 @@ public:
 int main()
 {
     // TODO: load game configuration file
+    // TODO: I would like to build this on the CAF framework https://actor-framework.org
     DungeonStream dstream;
     Character player1;
 
