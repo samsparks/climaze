@@ -6,6 +6,8 @@
 #include <boost//algorithm/string.hpp>
 
 #include "Character.hpp"
+#include "Maze.hpp"
+#include "Cell.hpp"
 
 class NCursesStream
 {
@@ -130,6 +132,63 @@ class NCursesStream
             return msg;
         }
     };
+    
+    class DisplayWindow : public Window
+    {
+    public:
+        DisplayWindow(size_t height, size_t width, size_t start_row, size_t start_col)
+        : Window(height, width, start_row, start_col)
+        {
+        }
+
+        void Write(const Maze<Cell>& dungeon)
+        {
+            for(unsigned row=0; row<dungeon.Rows(); ++row)
+            {
+                wmove(mAddress, row, 0);
+                for(unsigned col=0; col<dungeon.Columns(); ++col)
+                {
+                    if( dungeon.At(row, col).Opened() )
+                    {
+                        waddch(mAddress, ' ');
+                    }
+                    else
+                    {
+                        bool closed_above = dungeon.Contains(row-1,col) && !dungeon.At(row-1,col).Opened();
+                        bool closed_below = dungeon.Contains(row+1,col) && !dungeon.At(row+1,col).Opened();
+                        bool closed_left  = dungeon.Contains(row,col-1) && !dungeon.At(row,col-1 ).Opened();
+                        bool closed_right = dungeon.Contains(row,col+1) && !dungeon.At(row,col+1).Opened();
+                      
+                        if( closed_above && closed_below && closed_right && closed_left )
+                            waddch(mAddress, ACS_PLUS);
+                        else if( closed_below && closed_right && closed_left )
+                            waddch(mAddress, ACS_TTEE);
+                        else if( closed_above && closed_right && closed_left )
+                            waddch(mAddress, ACS_BTEE);
+                        else if( closed_above && closed_below && closed_left )
+                            waddch(mAddress, ACS_RTEE);
+                        else if( closed_above && closed_below && closed_right)
+                            waddch(mAddress, ACS_LTEE);
+                        else if( closed_below && closed_right )
+                            waddch(mAddress, ACS_ULCORNER);
+                        else if( closed_below && closed_left )
+                            waddch(mAddress, ACS_URCORNER);
+                        else if( closed_above && closed_right )
+                            waddch(mAddress, ACS_LLCORNER);
+                        else if( closed_above && closed_left )
+                            waddch(mAddress, ACS_LRCORNER);
+                        else if( closed_left || closed_right )
+                            waddch(mAddress, ACS_HLINE);
+                        else if( closed_above || closed_below )
+                            waddch(mAddress, ACS_VLINE);
+                        else
+                            throw std::runtime_error("Display: Unhandled cell detected");
+                    }
+                }
+            }
+            wrefresh(mAddress);
+        }
+    };
 
     class OutputWindow : public BoxWindow
     {
@@ -142,7 +201,6 @@ class NCursesStream
 
         void Write(const std::string& msg)
         {
-        //std::cerr << "Msg: " << msg << '\n';// XXX
             // put the message into the history, splitting lines that are longer than the window or have a newline
 
             // split on newlines
@@ -182,7 +240,7 @@ class NCursesStream
     };
 
     NCurses mNCurses; ///< structure for construction and destruction of the ncurses environment
-    Window mDisplayWindow; ///< used to display map of current location
+    DisplayWindow mDisplayWindow; ///< used to display map of current location
     BoxWindow mCharacterWindow; ///< used to display current character statistics
     OutputWindow mOutputWindow; ///< used for output game narraration
     InputWindow mInputWindow; ///< used for input of commands
@@ -193,8 +251,8 @@ public:
     : mNCurses(),
       mDisplayWindow(display_height, display_width, 1, 1),
       mCharacterWindow(mDisplayWindow.Height(), character_window_width, mDisplayWindow.StartRow(), mDisplayWindow.EndColumn()+1),
-      mOutputWindow(output_window_height, mCharacterWindow.EndColumn()-mDisplayWindow.StartColumn(), mDisplayWindow.EndRow()+1, mDisplayWindow.StartColumn()),
-      mInputWindow(1,                     mOutputWindow.Width(), mOutputWindow.EndRow()+1, mDisplayWindow.StartColumn()),
+      mOutputWindow(output_window_height, mCharacterWindow.EndColumn()-mDisplayWindow.StartColumn(), mDisplayWindow.EndRow(), mDisplayWindow.StartColumn()),
+      mInputWindow(1,                     mOutputWindow.Width(), mOutputWindow.EndRow(), mDisplayWindow.StartColumn()),
       mOuterWindow(mInputWindow.EndRow()+1, mInputWindow.EndColumn()+1, 0, 0)
     {
         mOuterWindow.Refresh();
@@ -220,16 +278,15 @@ public:
     // SetCharacterPaneWidth
     // SetIOPaneHeight
     // SetIOPaneWidth
+
+    //TODO: make these templates, with specialization for character and dungeon. All other info goes to the
+    // narration window
     friend NCursesStream& operator<<(NCursesStream& out, const Character& character);
     friend NCursesStream& operator<<(NCursesStream& out, const std::string& narraration);
+    friend NCursesStream& operator<<(NCursesStream& out, const Maze<Cell>& dungeon);
+
     friend NCursesStream& operator>>(NCursesStream& in, std::string& str);
 };
-/* TODO
-1. if not specialized, just write content story pane using ncurses
-2. endl and flush need to be overridden to call ncurses content
-
-Speciallize the following
-*/
 
 NCursesStream& operator<<(NCursesStream& out, const Character& character)
 {
@@ -246,11 +303,13 @@ NCursesStream& operator>>(NCursesStream& in, std::string& str)
     str = in.mInputWindow.Read();
     return in;
 }
-/*
-NCursesStream& ostream<<(NCursesStream& out, const Dungeon& dungeon)
+
+//TODO: make a template
+NCursesStream& operator<<(NCursesStream& out, const Maze<Cell>& dungeon)
 {
+    out.mDisplayWindow.Write(dungeon);
+    return out;
 }
-*/
 
 
 #endif // NCURSES_STREAM_HPP

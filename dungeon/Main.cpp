@@ -13,6 +13,11 @@
 #include "Character.hpp"
 #include "Story.hpp"
 
+#include "DepthFirstPolicy.hpp"
+#include "Generator.hpp"
+#include "Maze.hpp"
+#include "Cell.hpp"
+
 class CreationStory : public Story
 {
 public:
@@ -133,6 +138,8 @@ int main()
     // TODO: I would like to build this on the CAF framework https://actor-framework.org
     NCursesStream nstream;
     Character player1;
+    Generator::Generator<Maze<Cell>, Generator::DepthFirstPolicy<Maze<Cell>>> generator;
+    auto dungeon = generator.Build(30,50,15,49);
 
     ReplayStory replay_story(player1);
     Story* story_ptr = replay_story.GetStoryStartingPoint();
@@ -142,8 +149,7 @@ int main()
     {
         nstream //<< TODO: player1
                 << story_ptr->Narraration()
-                ; // TODO: << std::endl;
-        nstream.flush();
+                << dungeon;
         nstream >> response;
 
         story_ptr = story_ptr->ProcessResponse(response);
