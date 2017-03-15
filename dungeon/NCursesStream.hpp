@@ -98,8 +98,7 @@ class NCursesStream
         std::string Read()
         {
             bool enter_received = false;
-            std::string msg(mMaxInputLength, ' ');
-            int index = 0;
+            std::string msg;
 
             while( !enter_received )
             {
@@ -109,7 +108,7 @@ class NCursesStream
                 case 0x08: // backspace
                 case 0x7F: // delete
                     if( !msg.empty() )
-                        msg[index--] = ' ';
+                        msg.pop_back();
                     break;
                 case '\n':
                 case '\r':
@@ -117,20 +116,14 @@ class NCursesStream
                     break;
                 default:
                     if( std::isprint(c) )
-                        msg[index++] = c;
+                        msg.push_back(c);
                 }
                 mvwprintw(mAddress, 0, mPrompt.length(), "%s", msg.c_str());
+                wclrtoeol(mAddress);
                 wrefresh(mAddress);
-
-                //TODO: we could make this more intelligent
-                /*
-                if(index == MAX_INPUT_LENGTH)
-                    enter_received = true;
-                */
             }
             wmove(mAddress, 0, mPrompt.length());
-            for(auto i=0; i<index; ++i)
-                waddch(mAddress, ' ');
+            wclrtoeol(mAddress);
                 
             wrefresh(mAddress);
             return msg;
@@ -139,6 +132,8 @@ class NCursesStream
 
     struct OutputWindow : public BoxWindow
     {
+
+    public:
         OutputWindow(int height, int width, int start_row, int start_col)
         : BoxWindow(height, width, start_row, start_col)
         {
@@ -147,6 +142,8 @@ class NCursesStream
 
         void Write(const std::string& msg)
         {
+            // boost split on newline
+            // add to list
             mvwprintw(mAddress, 1, 1, "%s", msg.c_str());
             wrefresh(mAddress);
         }
